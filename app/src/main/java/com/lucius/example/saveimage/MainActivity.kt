@@ -3,6 +3,8 @@ package com.lucius.example.saveimage
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
@@ -36,11 +38,12 @@ class MainActivity : AppCompatActivity() {
             if (data == null) return
             Log.e("log", data.data.toString())
             val stream = contentResolver.openInputStream(data.data)
+            val bitmap = BitmapFactory.decodeStream(stream)
             val file = createImageFile()
             val outStream = FileOutputStream(file)
-            val bytes = stream.readBytes()
 
-            outStream.write(bytes)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
+
             Log.e("log", "done 1")
 
             val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
